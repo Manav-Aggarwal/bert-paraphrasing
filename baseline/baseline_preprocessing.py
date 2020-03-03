@@ -33,6 +33,8 @@ def isInContext(token, context_token_lemmas):
 b1_train_dev_combined = copy.deepcopy(squad_train_dev_combined)
 
 flag = False
+num_topics = 0
+datalen = len(b1_train_dev_combined['data'])
 for topic in b1_train_dev_combined['data']:
     # if flag:
     #     break
@@ -58,6 +60,9 @@ for topic in b1_train_dev_combined['data']:
             else:
                 paragraph['qas'][i]['question'] = new_question
                 i += 1
+
+    num_topics += 1
+    print("{}/{} topics done".format(num_topics, datalen))
 
 from gensim.models.wrappers import FastText
 model = FastText.load_fasttext_format('wiki.simple')
@@ -131,13 +136,13 @@ modified_squad_test = {'version': 'v2.0'}
 modified_squad_test['data'] = squad_train_dev_combined['data'][train_n+dev_n: ]
 
 with open('modified_squad_dataset/modified_squad_train.json', 'w') as fp:
-    json.dump(modified_train, fp)
+    json.dump(modified_squad_train, fp)
 
 with open('modified_squad_dataset/modified_squad_dev.json', 'w') as fp:
-    json.dump(modified_dev, fp)
+    json.dump(modified_squad_dev, fp)
 
 with open('modified_squad_dataset/modified_squad_test.json', 'w') as fp:
-    json.dump(modified_test, fp)
+    json.dump(modified_squad_test, fp)
 
 # Baseline 1 dataset
 total_n = len(b1_train_dev_combined['data'])
